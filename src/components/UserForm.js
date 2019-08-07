@@ -71,6 +71,19 @@ const UserForm = ({ values, errors, touched, status }) => {
                 </div>
                 <div className='submit'>
                 <label>
+                    Select Avatar
+                    <Field className='dropdown' component="select" name="avatar">
+                            
+                            <option>Choose Class</option>
+                            <option value="https://i.pinimg.com/736x/31/03/b5/3103b51dd39a455d791b77a1c596adc7--character-portraits-character-ideas.jpg">Warrior</option>
+                            <option value="https://i.pinimg.com/736x/58/94/e2/5894e258ed7d24c58ca4ef5a4996415b.jpg">Paladin</option>
+                            <option value="https://i.pinimg.com/originals/9d/94/49/9d9449a490c37ee4730461dcc4229b91.jpg">Mage</option>
+                            <option value="https://i.pinimg.com/originals/1f/5d/f5/1f5df5bd3f67181eeeb419f9b103b4d4.jpg">Priest</option>
+                            <option value="https://i.pinimg.com/originals/7d/f9/35/7df93579990af233a0afb0957c586f62.png">Archer</option>
+                            <option value="https://i.pinimg.com/736x/e9/6b/68/e96b68e511014a93df4eaa3ccf8616dc.jpg">Rouge</option>
+                    </Field>
+                    </label>
+                <label>
                     <Field type='checkbox' name='tos' checked={values.tos} />
                     Accept Terms of Service
                 </label>
@@ -82,15 +95,24 @@ const UserForm = ({ values, errors, touched, status }) => {
         <div className='users'>
             <h1>Players</h1>
             <div className='char-card'>
+                
             {users
                 ? users.map(user => (
                     
                     <div className='user-info' key={user.id}>
-                    <h4>User Name: {user.name}</h4>
-                    <hr />
-                    <h5>Charcter Name: {user.charname}</h5>
-                    <h5>Race: {user.race}</h5>
-                    <h5>Class: {user.charclass}</h5>
+                    <h3>{user.name}</h3>
+                    
+                    <div className='char-img'>
+                        <img src={user.avatar}/>
+                    </div>
+                        <div className='char-info'>
+                            
+                            <h5>Name : {user.charname}</h5>
+                            
+                            <h5>Race : {user.race}</h5>
+                           
+                            <h5>Class : {user.charclass}</h5>
+                        </div>
                     </div>
                     
                 ))
@@ -102,7 +124,7 @@ const UserForm = ({ values, errors, touched, status }) => {
 }
 
 const FormikUserForm = withFormik({
-    mapPropsToValues({ name, email, password, tos, users, race, charname, charclass }) {
+    mapPropsToValues({ name, email, password, tos, users, race, charname, charclass, avatar }) {
         return {
             name: name || '',
             email: email || '',
@@ -111,7 +133,8 @@ const FormikUserForm = withFormik({
             charname: charname || '',
             race: race || '',
             charclass: charclass || '',
-            users: users || ''
+            users: users || '',
+            avatar: avatar || '',
         };
     },
 
@@ -131,7 +154,9 @@ const FormikUserForm = withFormik({
         race: Yup.string()
         .required('Please select a race'),
         charclass: Yup.string()
-        .required('Please select a class')
+        .required('Please select a class'),
+        avatar: Yup.string()
+        .required('Please select an avatar')
     }),
 
     handleSubmit(values, { resetForm, setStatus })  {
@@ -144,6 +169,7 @@ const FormikUserForm = withFormik({
             charname: values.charname,
             charclass: values.charclass,
             race: values.race,
+            avatar: values.avatar,
         })
         .then(response  => { 
             console.log(response.data)
